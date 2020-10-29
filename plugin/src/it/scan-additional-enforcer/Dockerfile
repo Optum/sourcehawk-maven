@@ -1,0 +1,1 @@
+FROM hub.docker.com/hello-world

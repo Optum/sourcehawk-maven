@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.optum.sourcehawk</groupId>
+        <artifactId>sourcehawk-jar-parent</artifactId>
+        <version>1.0.4</version>
+    </parent>
+
+    <groupId>com.optum.sourcehawk.maven</groupId>
+    <artifactId>sourcehawk-maven</artifactId>
+    <packaging>pom</packaging>
+    <version>0.1.0-SNAPSHOT</version>
+
+    <name>Sourcehawk Maven</name>
+    <description>A collection of Sourcehawk maven projects</description>
+
+    <developers>
+        <developer>
+            <id>brianwyka</id>
+            <name>Brian Wyka</name>
+            <email>brian.wyka@optum.com</email>
+            <organization>Optum</organization>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+        </developer>
+        <developer>
+            <id>ctoestreich</id>
+            <name>Christian Oestreich</name>
+            <email>christian.oestreich@optum.com</email>
+            <organization>Optum</organization>
+            <roles>
+                <role>Project Lead</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <url>https://github.com/optum/sourcehawk-maven</url>
+
+    <scm>
+        <url>https://github.com/optum/sourcehawk-maven</url>
+        <connection>scm:git:${project.url}.git</connection>
+        <developerConnection>scm:git:git@github.com:Optum/sourcehawk-maven.git</developerConnection>
+    </scm>
+
+    <issueManagement>
+        <url>https://github.com/optum/sourcehawk-maven/actions</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>github</system>
+        <url>https://github.com.com/Optum/sourcehawk-maven/actions</url>
+    </ciManagement>
+
+    <properties>
+        <sourcehawk.version>0.1.3</sourcehawk.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.optum.sourcehawk</groupId>
+                <artifactId>sourcehawk-bom</artifactId>
+                <version>${sourcehawk.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>1.18.12</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>1.7.30</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>plugin</module>
+    </modules>
+
+</project>

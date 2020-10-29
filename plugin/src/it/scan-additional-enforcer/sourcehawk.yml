@@ -1,0 +1,15 @@
+
+file-protocols:
+  - name: Dockerfile
+    description: Compliant Dockerfile
+    group: props
+    tags:
+      - props
+    repository-path: Dockerfile
+    required: true
+    severity: ERROR
+    enforcers:
+      - enforcer: .docker.DockerfileFromHostEquals
+        expected-from-host: hub.docker.com
+      - enforcer: .docker.DockerfileFromImageEquals
+        expected-from-image: hello-world
