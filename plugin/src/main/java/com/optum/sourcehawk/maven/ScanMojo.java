@@ -5,7 +5,6 @@ import com.optum.sourcehawk.core.scan.OutputFormat;
 import com.optum.sourcehawk.core.scan.ScanResult;
 import com.optum.sourcehawk.core.scan.Severity;
 import com.optum.sourcehawk.core.scan.Verbosity;
-import com.optum.sourcehawk.core.utils.StringUtils;
 import com.optum.sourcehawk.exec.ExecOptions;
 import com.optum.sourcehawk.exec.ScanExecutor;
 import lombok.val;
@@ -120,9 +119,9 @@ public class ScanMojo extends AbstractSourcehawkMojo {
         }
         val errorMessage = "Scan failed, see below for errors";
         getLog().error(errorMessage);
-        val reportContent = scanResult.getFormattedMessages()
+        val reportContent = scanResult.getMessages().entrySet()
                 .stream()
-                .filter(message -> !StringUtils.isBlankOrEmpty(message))
+                .flatMap(entry -> entry.getValue().stream())
                 .map(this::logAndReturn)
                 .collect(Collectors.joining(System.lineSeparator()));
         writeReportOutputFile(reportContent);
@@ -132,19 +131,24 @@ public class ScanMojo extends AbstractSourcehawkMojo {
     }
 
     /**
-     * Log the message with the appropriate logger and then return it
+     * Log the messageDescriptor with the appropriate logger and then return it
      *
-     * @param message the message to the log
-     * @return the original message
+     * @param messageDescriptor the messageDescriptor to the log
+     * @return the original messageDescriptor
      */
-    private String logAndReturn(final String message) {
-        if (message.contains(Severity.ERROR.name())) {
-            getLog().error(message);
-        } else if (message.contains(Severity.WARNING.name())) {
-            getLog().warn(message);
+    private String logAndReturn(final ScanResult.MessageDescriptor messageDescriptor) {
+        val message = String.format("%s :: %s", messageDescriptor.getRepositoryPath(), messageDescriptor.getMessage());
+        switch (Severity.parse(messageDescriptor.getSeverity())) {
+            case ERROR:
+                getLog().error(message);
+                break;
+            case WARNING:
+                getLog().warn(message);
+                break;
+            default:
+                getLog().info(message);
         }
-        getLog().info(message);
-        return message;
+        return messageDescriptor.toString();
     }
 
     /**

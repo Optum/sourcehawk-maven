@@ -11,5 +11,11 @@ A Maven plugin which can be used to execute [Sourcehawk](https://github.com/optu
 
 [Documentation](https://optum.github.io/sourcehawk-maven)
 
+#### Demo
+
+[![Maven Plugin Demo](https://optum.github.io/sourcehawk-docs/img/demo/maven.gif)](https://optum.github.io/sourcehawk-docs/img/demo/maven.gif)
+
+Click the demo to enlarge.
+
 ## Contributing
 If you wish to contribute to the development of Sourcehawk please read [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
