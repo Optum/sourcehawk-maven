@@ -93,3 +93,43 @@ Examples
     </configuration>
 </plugin>
 +---+
+
+* Flatten Configuration To Console
+
+  Will flatten your Sourcehawk configuration file and output to the console
+
++---+
+<plugin>
+    <groupId>com.optum.sourcehawk.maven</groupId>
+    <artifactId>sourcehawk-maven-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>flatten</id>
+            <goals>
+                <goal>flatten</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
++---+
+
+* Flatten Configuration To File System
+
+  Will flatten your Sourcehawk configuration file and output to the file system using <<<flattenOutputFile>>> path
+
++---+
+<plugin>
+    <groupId>com.optum.sourcehawk.maven</groupId>
+    <artifactId>sourcehawk-maven-plugin</artifactId>
+    <executions>
+        <execution>
+            <id>flatten</id>
+            <goals>
+                <goal>flatten</goal>
+            </goals>
+            <configuration>
+                <flattenOutputFile>${project.basedir}/sourcehawk-flattened.yml</flattenOutputFile>
+        </execution>
+    </executions>
+</plugin>
++---+

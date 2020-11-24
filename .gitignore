@@ -31,4 +31,6 @@ nbdist/
 docker-compose-dev.yml
 dependency-reduced-pom.xml
 
+sourcehawk-flattened.yml
+
 gh-pages

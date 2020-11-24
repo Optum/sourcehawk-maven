@@ -26,6 +26,8 @@ import java.util.stream.Collectors;
  *
  * @author Brian Wyka
  * @author Christian Oestreich
+ *
+ * @since 0.1.0
  */
 @Mojo(
         name = "scan",
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
         aggregator = true
 )
 @SuppressWarnings("unused")
-public class ScanMojo extends AbstractSourcehawkMojo {
+public class ScanMojo extends AbstractBuildFailingSourcehawkMojo {
 
     /**
      * The default location which to output the report
@@ -44,7 +46,7 @@ public class ScanMojo extends AbstractSourcehawkMojo {
     /**
      * The file which the scan report will be output to, defaults to {@value #DEFAULT_REPORT_LOCATION}
      *
-     * @since 1.0.0
+     * @since 0.1.0
      */
     @Parameter(property = PROPERTY_PREFIX + "reportOutputFile", defaultValue = DEFAULT_REPORT_LOCATION, required = true)
     protected File reportOutputFile;
@@ -52,14 +54,16 @@ public class ScanMojo extends AbstractSourcehawkMojo {
     /**
      * Whether or not to skip execution
      *
-     * @since 1.0.0
+     * @since 0.1.0
      */
     @Parameter(property = PROPERTY_NAME_SKIP, defaultValue = "false")
     protected boolean skipScan;
     private static final String PROPERTY_NAME_SKIP = PROPERTY_PREFIX + "skipScan";
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() throws MojoExecutionException {
         executeScan();
@@ -99,7 +103,7 @@ public class ScanMojo extends AbstractSourcehawkMojo {
      */
     private void validateConfigurations() {
         if (!configurationFile.exists()) {
-            throw new ScanException("Configuration file does not exist");
+            throw new SourcehawkException("Configuration file does not exist");
         }
     }
 
@@ -107,8 +111,8 @@ public class ScanMojo extends AbstractSourcehawkMojo {
      * Handle the scan result
      *
      * @param scanResult the scan result
-     * @throws IOException if any file writing errors occur
-     * @throws ScanException if the scan resulted in failure
+     * @throws IOException   if any file writing errors occur
+     * @throws SourcehawkException if the scan resulted in failure
      */
     private void handleScanResult(final ScanResult scanResult) throws IOException {
         if (scanResult.isPassed()) {
@@ -126,7 +130,7 @@ public class ScanMojo extends AbstractSourcehawkMojo {
                 .collect(Collectors.joining(System.lineSeparator()));
         writeReportOutputFile(reportContent);
         if (failBuild) {
-            throw new ScanException(errorMessage);
+            throw new SourcehawkException(errorMessage);
         }
     }
 

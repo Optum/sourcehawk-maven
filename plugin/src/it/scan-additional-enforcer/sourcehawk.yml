@@ -9,7 +9,7 @@ file-protocols:
     required: true
     severity: ERROR
     enforcers:
-      - enforcer: .docker.DockerfileFromHostEquals
-        expected-from-host: hub.docker.com
+      - enforcer: .docker.DockerfileFromRegistryEquals
+        expected-from-registry: hub.docker.com
       - enforcer: .docker.DockerfileFromImageEquals
         expected-from-image: hello-world

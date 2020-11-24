@@ -38,3 +38,7 @@ Usage
 +---+
 mvn sourcehawk:scan
 +---+
+
++---+
+mvn sourcehawk:flatten-config
++---+
