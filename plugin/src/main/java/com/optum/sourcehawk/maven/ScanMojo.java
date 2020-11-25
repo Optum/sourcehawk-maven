@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Goal which is responsible for performing scan
  *
  * @author Brian Wyka
  * @author Christian Oestreich
- *
  * @since 0.1.0
  */
 @Mojo(
@@ -111,27 +111,41 @@ public class ScanMojo extends AbstractBuildFailingSourcehawkMojo {
      * Handle the scan result
      *
      * @param scanResult the scan result
-     * @throws IOException   if any file writing errors occur
+     * @throws IOException         if any file writing errors occur
      * @throws SourcehawkException if the scan resulted in failure
      */
     private void handleScanResult(final ScanResult scanResult) throws IOException {
-        if (scanResult.isPassed()) {
+        getLog().info("Fail On Warnings = " + failOnWarnings);
+        getLog().info("Show Warnings = " + showWarnings);
+        if (scanResult.isPassed() && !(failOnWarnings && scanResult.getWarningCount() > 0)) {
             val message = "Scan passed without any errors!";
             getLog().info(message);
-            writeReportOutputFile(message);
+            if (showWarnings) {
+                writeReportOutputFile(Stream.of(message, getReportContent(scanResult))
+                        .collect(Collectors.joining(System.lineSeparator())));
+            } else {
+                writeReportOutputFile(message);
+            }
             return;
         }
-        val errorMessage = "Scan failed, see below for errors";
+        val errorMessage = String.format("Scan failed, see below for errors%s", getFailOnWarningsText());
         getLog().error(errorMessage);
-        val reportContent = scanResult.getMessages().entrySet()
+        writeReportOutputFile(getReportContent(scanResult));
+        if (failBuild) {
+            throw new SourcehawkException(errorMessage);
+        }
+    }
+
+    private String getFailOnWarningsText() {
+        return failOnWarnings ? " (failOnWarnings = true)" : "";
+    }
+
+    private String getReportContent(final ScanResult scanResult) {
+        return scanResult.getMessages().entrySet()
                 .stream()
                 .flatMap(entry -> entry.getValue().stream())
                 .map(this::logAndReturn)
                 .collect(Collectors.joining(System.lineSeparator()));
-        writeReportOutputFile(reportContent);
-        if (failBuild) {
-            throw new SourcehawkException(errorMessage);
-        }
     }
 
     /**

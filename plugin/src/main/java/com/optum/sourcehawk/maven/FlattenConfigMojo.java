@@ -19,7 +19,7 @@ import java.time.Instant;
  * Goal which is responsible for flattening Sourcehawk configuration files.  Will recurse remote files and merge configurations.
  *
  * @author Christian Oestreich
- * @since 0.4.0
+ * @since 0.2.0
  */
 @Mojo(
         name = "flatten-config",
@@ -38,7 +38,7 @@ public class FlattenConfigMojo extends AbstractSourcehawkMojo {
     /**
      * The file which the scan report will be output to, defaults to {@value #DEFAULT_REPORT_LOCATION}
      *
-     * @since 0.4.0
+     * @since 0.2.0
      */
     @Parameter(property = PROPERTY_PREFIX + "flattenOutputFile", defaultValue = DEFAULT_REPORT_LOCATION)
     protected File flattenOutputFile;
@@ -46,7 +46,7 @@ public class FlattenConfigMojo extends AbstractSourcehawkMojo {
     /**
      * Whether or not to output to the console, default is true which will NOT output to file
      *
-     * @since 0.4.0
+     * @since 0.2.0
      */
     @Parameter(property = PROPERTY_NAME_CONSOLE_OUTPUT, defaultValue = "true")
     protected boolean flattenOutputConsole;
@@ -82,11 +82,14 @@ public class FlattenConfigMojo extends AbstractSourcehawkMojo {
                     .build();
 
             val flattenConfigResult = FlattenConfigExecutor.flatten(execOptions.getConfigurationFileLocation());
+            if (flattenConfigResult.isError()) {
+                throw new SourcehawkException(flattenConfigResult.getFormattedMessage());
+            }
             val output = flattenOutputFile != null ? flattenOutputFile.toPath() : null;
             FlattenConfigResultLogger.log(flattenConfigResult, output);
             mavenSession.getRequest().getData().put(SourcehawkConstants.NAME, true);
         } catch (final Exception e) {
-            throw new MojoExecutionException("Error executing scan", e);
+            throw new MojoExecutionException("Error executing flatten", e);
         } finally {
             getLog().info(String.format("Scan completed in %dms", (Instant.now().toEpochMilli() - startTime)));
         }
