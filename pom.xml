@@ -56,7 +56,7 @@
     </ciManagement>
 
     <properties>
-        <sourcehawk.version>0.4.1-SNAPSHOT</sourcehawk.version>
+        <sourcehawk.version>0.4.4</sourcehawk.version>
     </properties>
 
     <dependencyManagement>
