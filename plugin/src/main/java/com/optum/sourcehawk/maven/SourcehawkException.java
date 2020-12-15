@@ -1,11 +1,12 @@
 package com.optum.sourcehawk.maven;
 
 /**
- * An exception which indicates a failure occurred during scan execution
+ * An exception which indicates a failure occurred during mojo execution
  *
  * @author Brian Wyka
+ * @author Christian Oestreich
  */
-public class ScanException extends RuntimeException {
+public class SourcehawkException extends RuntimeException {
 
     private static final long serialVersionUID = -669093284499316358L;
 
@@ -14,7 +15,7 @@ public class ScanException extends RuntimeException {
      *
      * @param message the message
      */
-    ScanException(final String message) {
+    SourcehawkException(final String message) {
         super(message);
     }
 

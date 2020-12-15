@@ -6,7 +6,7 @@ import com.optum.sourcehawk.core.scan.ScanResult;
 import com.optum.sourcehawk.core.scan.Severity;
 import com.optum.sourcehawk.core.scan.Verbosity;
 import com.optum.sourcehawk.exec.ExecOptions;
-import com.optum.sourcehawk.exec.ScanExecutor;
+import com.optum.sourcehawk.exec.scan.ScanExecutor;
 import lombok.val;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -20,12 +20,14 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.Instant;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Goal which is responsible for performing scan
  *
  * @author Brian Wyka
  * @author Christian Oestreich
+ * @since 0.1.0
  */
 @Mojo(
         name = "scan",
@@ -34,7 +36,7 @@ import java.util.stream.Collectors;
         aggregator = true
 )
 @SuppressWarnings("unused")
-public class ScanMojo extends AbstractSourcehawkMojo {
+public class ScanMojo extends AbstractBuildFailingSourcehawkMojo {
 
     /**
      * The default location which to output the report
@@ -44,7 +46,7 @@ public class ScanMojo extends AbstractSourcehawkMojo {
     /**
      * The file which the scan report will be output to, defaults to {@value #DEFAULT_REPORT_LOCATION}
      *
-     * @since 1.0.0
+     * @since 0.1.0
      */
     @Parameter(property = PROPERTY_PREFIX + "reportOutputFile", defaultValue = DEFAULT_REPORT_LOCATION, required = true)
     protected File reportOutputFile;
@@ -52,14 +54,16 @@ public class ScanMojo extends AbstractSourcehawkMojo {
     /**
      * Whether or not to skip execution
      *
-     * @since 1.0.0
+     * @since 0.1.0
      */
     @Parameter(property = PROPERTY_NAME_SKIP, defaultValue = "false")
     protected boolean skipScan;
     private static final String PROPERTY_NAME_SKIP = PROPERTY_PREFIX + "skipScan";
 
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute() throws MojoExecutionException {
         executeScan();
@@ -99,7 +103,7 @@ public class ScanMojo extends AbstractSourcehawkMojo {
      */
     private void validateConfigurations() {
         if (!configurationFile.exists()) {
-            throw new ScanException("Configuration file does not exist");
+            throw new SourcehawkException("Configuration file does not exist");
         }
     }
 
@@ -107,27 +111,41 @@ public class ScanMojo extends AbstractSourcehawkMojo {
      * Handle the scan result
      *
      * @param scanResult the scan result
-     * @throws IOException if any file writing errors occur
-     * @throws ScanException if the scan resulted in failure
+     * @throws IOException         if any file writing errors occur
+     * @throws SourcehawkException if the scan resulted in failure
      */
     private void handleScanResult(final ScanResult scanResult) throws IOException {
-        if (scanResult.isPassed()) {
+        getLog().info("Fail On Warnings = " + failOnWarnings);
+        getLog().info("Show Warnings = " + showWarnings);
+        if (scanResult.isPassed() && !(failOnWarnings && scanResult.getWarningCount() > 0)) {
             val message = "Scan passed without any errors!";
             getLog().info(message);
-            writeReportOutputFile(message);
+            if (showWarnings) {
+                writeReportOutputFile(Stream.of(message, getReportContent(scanResult))
+                        .collect(Collectors.joining(System.lineSeparator())));
+            } else {
+                writeReportOutputFile(message);
+            }
             return;
         }
-        val errorMessage = "Scan failed, see below for errors";
+        val errorMessage = String.format("Scan failed, see below for errors%s", getFailOnWarningsText());
         getLog().error(errorMessage);
-        val reportContent = scanResult.getMessages().entrySet()
+        writeReportOutputFile(getReportContent(scanResult));
+        if (failBuild) {
+            throw new SourcehawkException(errorMessage);
+        }
+    }
+
+    private String getFailOnWarningsText() {
+        return failOnWarnings ? " (failOnWarnings = true)" : "";
+    }
+
+    private String getReportContent(final ScanResult scanResult) {
+        return scanResult.getMessages().entrySet()
                 .stream()
                 .flatMap(entry -> entry.getValue().stream())
                 .map(this::logAndReturn)
                 .collect(Collectors.joining(System.lineSeparator()));
-        writeReportOutputFile(reportContent);
-        if (failBuild) {
-            throw new ScanException(errorMessage);
-        }
     }
 
     /**

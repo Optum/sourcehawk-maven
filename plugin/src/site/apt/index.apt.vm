@@ -32,9 +32,11 @@ ${project.name}
 
 * Goals Overview
 
-  The Sourcehawk Maven Plugin has 1 goal:
+  The Sourcehawk Maven Plugin has 2 goal:
 
   * {{{./scan-mojo.html}sourcehawk:scan}} is used to perform scans
+
+  * {{{./flatten-config-mojo.html}sourcehawk:flatten-config}} is used to flatten configurations to console or file
 
   []
 

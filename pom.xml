@@ -6,13 +6,13 @@
     <parent>
         <groupId>com.optum.sourcehawk</groupId>
         <artifactId>sourcehawk-jar-parent</artifactId>
-        <version>1.1.5</version>
+        <version>1.1.9</version>
     </parent>
 
     <groupId>com.optum.sourcehawk.maven</groupId>
     <artifactId>sourcehawk-maven</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
 
     <name>Sourcehawk Maven</name>
     <description>A collection of Sourcehawk maven projects</description>
@@ -56,7 +56,8 @@
     </ciManagement>
 
     <properties>
-        <sourcehawk.version>0.1.7</sourcehawk.version>
+        <sourcehawk.version>0.4.5</sourcehawk.version>
+        <slf4j.version>2.0.0-alpha1</slf4j.version>
     </properties>
 
     <dependencyManagement>
@@ -76,13 +77,14 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
-                <version>1.7.30</version>
+                <version>${slf4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
         <module>plugin</module>
+        <module>integration-test</module>
     </modules>
 
 </project>
