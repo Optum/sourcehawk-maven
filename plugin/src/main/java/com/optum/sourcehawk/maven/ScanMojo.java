@@ -6,7 +6,7 @@ import com.optum.sourcehawk.core.scan.ScanResult;
 import com.optum.sourcehawk.core.scan.Severity;
 import com.optum.sourcehawk.core.scan.Verbosity;
 import com.optum.sourcehawk.exec.ExecOptions;
-import com.optum.sourcehawk.exec.ScanExecutor;
+import com.optum.sourcehawk.exec.scan.ScanExecutor;
 import lombok.val;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;

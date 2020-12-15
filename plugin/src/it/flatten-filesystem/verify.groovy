@@ -9,12 +9,12 @@ assert reportFile.isFile()
 // Assert the report content is as expected
 InputStream fileInputStream = new FileInputStream(reportFile)
 String reportContent = IOUtils.toString(fileInputStream, Charset.defaultCharset())
-assert reportContent.trim() == """---
-fileProtocols:
+
+assert reportContent.trim() == """file-protocols:
 - name: "Test Properties"
   description: "Test Properties"
   group: "props"
-  repositoryPath: "test.properties"
+  repository-path: "test.properties"
   required: true
   tags:
   - "props"
