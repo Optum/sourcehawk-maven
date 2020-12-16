@@ -1,0 +1,14 @@
+
+file-protocols-not-exists-asdf:
+  - nasme: Test Properties
+    desscription: Test Properties
+    grosup: props
+    tasgs:
+      - props
+    repsossitory-path: test.properties
+    requisred: true
+    severssity: ERROR
+    enforcsers:
+      - enfsorcer: .common.StringPropertyEquals
+        prosperty-name: key
+        expessscted-property-value: value
