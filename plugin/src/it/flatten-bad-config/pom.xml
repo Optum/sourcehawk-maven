@@ -5,22 +5,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.sourcehawk.maven.it</groupId>
-    <artifactId>flatten-filesystem</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
+    <artifactId>flatten-bad-config</artifactId>
+    <version>0-SNAPSHOT</version>
 
-    <description>A simple IT verifying the flatten to the filesystem.</description>
+    <description>A simple IT verifying the flatten.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <sourcehawk.flattenOutputFile>sourcehawk-flattened.yml</sourcehawk.flattenOutputFile>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>com.optum.sourcehawk.maven</groupId>
-                <artifactId>sourcehawk-maven-plugin</artifactId>
-                <version>0.2.0-SNAPSHOT</version>
+                <groupId>@project.groupId@</groupId>
+                <artifactId>@project.artifactId@</artifactId>
+                <version>@project.version@</version>
                 <executions>
                     <execution>
                         <id>flatten-config</id>

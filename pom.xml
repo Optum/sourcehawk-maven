@@ -84,7 +84,6 @@
 
     <modules>
         <module>plugin</module>
-        <module>integration-test</module>
     </modules>
 
 </project>
